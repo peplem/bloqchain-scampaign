@@ -1,0 +1,69 @@
+<!--<mat-card class="camp-creat">
+    <mat-card-title>Create Campaign</mat-card-title>
+    <mat-card-subtitle>placeholder</mat-card-subtitle>
+    <mat-form-field appearance="fill">
+      <input id="name" matInput placeholder="name"> 
+    </mat-form-field><br>
+    <mat-form-field appearance="fill">
+      <input id="expiry" matInput type="number" min="0" max="256" value="0" placeholder="expiry">
+    </mat-form-field><br>
+    <mat-form-field appearance="fill">
+      <input id="fundgoal" matInput type="number" min="0" max="1000" value="0" placeholder="fund goal">
+    </mat-form-field><br>
+    <mat-form-field appearance="fill">
+      <input id="address" matInput placeholder="address">
+    </mat-form-field>
+    <mat-card-actions align="end">
+      <button mat-button (click)="spawn()">CREATE</button>
+    </mat-card-actions>
+</mat-card>-->
+
+<mat-card class="camp-creat">
+  <mat-stepper [linear]="isLinear" #stepper>
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>One</ng-template>
+        <mat-form-field appearance="fill">
+          <mat-label>Name</mat-label>
+          <input id="name" matInput placeholder="" formControlName="firstCtrl" required>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperNext (click)="setName()" >Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup" label="Two">
+      <form [formGroup]="secondFormGroup">
+        <mat-form-field appearance="fill">
+          <mat-label>Fund Goal</mat-label>
+          <input id="fundgoal" matInput formControlName="secondCtrl" placeholder=""
+                 required>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext (click)="setFundGoal()">Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="thirdFormGroup" label="Three">
+      <form [formGroup]="thirdFormGroup">
+        <mat-form-field appearance="fill">
+          <mat-label>Expiry</mat-label>
+          <input id="expiry" matInput formControlName="thirdCtrl" placeholder=""
+                 required>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext (click)="setExpiry()">Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Four</ng-template>
+      <div>
+        <button mat-button (click)="spawnNewCampaign()">Submit</button>
+        <button mat-button (click)="stepper.reset()">Reset</button>
+      </div>
+    </mat-step>
+  </mat-stepper>  
+</mat-card>

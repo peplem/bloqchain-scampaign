@@ -1,0 +1,19 @@
+<mat-toolbar class="toolbar">
+  <a routerLink="/" routerLinkActive="active">
+    <button mat-raised-button color="secondary">HOME</button>
+  </a>
+  <mat-icon></mat-icon>
+  <a routerLink="/spawn" routerLinkActive="active">
+    <button mat-raised-button color="primary">CREATE CAMPAIGN</button>
+  </a> 
+  <mat-icon></mat-icon>
+  <a routerLink="/user" routerLinkActive="active">
+    <button mat-raised-button color="warn">USER</button>
+  </a>
+  <mat-icon></mat-icon>
+  <a routerLink="/egg" routerLinkActive="active">
+    <button class="easter" mat-raised-button color="secondary">Easter Egg</button>
+  </a>
+</mat-toolbar>
+
+<router-outlet></router-outlet>

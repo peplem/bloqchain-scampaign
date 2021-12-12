@@ -1,0 +1,27 @@
+<mat-card class="user-prof">
+    <mat-card-title>User profile</mat-card-title><br>
+    <mat-card-content>
+      <mat-form-field *ngIf="contentControl == 0" appearance="fill">
+        <input id="userAddr" matInput placeholder="user address" required>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-content *ngIf="contentControl == 1">
+      <h2>Started Campaign</h2>
+      <p>fundgoal</p>
+      <p>raised</p>
+      <p>expiry</p>
+      <p>status</p>
+    </mat-card-content>
+    <mat-card-content *ngIf="contentControl == 1">
+      <h2>Funded Campaigns</h2>
+      <p>fundgoal</p>
+      <p>raised</p>
+      <p>expiry</p>
+      <p>status</p>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-button (click)="contentControl = 0">RESET</button>
+      <button mat-button (click)="spawnCampaignCard()">SEARCH</button>
+      <!-- TODO campagne iniziate + campagne sottoscritte -->
+    </mat-card-actions>
+</mat-card>
