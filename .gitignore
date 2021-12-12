@@ -5,6 +5,7 @@
 ### Angular ###
 ## Angular ##
 # compiled output
+.angular/
 dist/
 tmp/
 app/**/*.js
@@ -169,9 +170,3 @@ build_webpack
 blockchain/geth/**
 blockchain/keystore/**
 blockchain/history
-
-#truffle
-yarn.lock
-package-lock.json
-
-# End of file
