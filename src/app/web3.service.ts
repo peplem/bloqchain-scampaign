@@ -8,78 +8,56 @@ export class Web3Service {
   instance;
   registry;
   crowdfunding;
-  userAddr;
+  userAddr = '0x8357b534f26aaf7c631d048333cbbb9cfd2fce4b';
 
   constructor() { 
     this.instance = new Web3('http://localhost:9545');
     console.debug(this.instance);
 
     const CrowdFundingSchema = require("../../build/contracts/CrowdFunding.json");
-    this.crowdfunding = new this.instance.eth.Contract(CrowdFundingSchema.abi, '0x5Cb061aD9FEDDAAF175485266Fd8A15fe0dF0994');
-    const RegistrySchema = require("../../build/contracts/Registry.json");
-    this.registry = new this.instance.eth.Contract(RegistrySchema.abi, '0x3178822de033a720C6F3B0b575D63280a47108d6');
-
-
-    console.debug(this.crowdfunding);
-
-    /*this.crowdfunding.events.campaignList(function(error, event){ 
-      console.log(event); 
-    })
-    .on('data', function(event){
-      console.log(event);
-    })*/
+    this.crowdfunding = new this.instance.eth.Contract(CrowdFundingSchema.abi, '0xf83E3E7c312e8419cebBBa78020963122F3bBAae');
     
+    const RegistrySchema = require("../../build/contracts/Registry.json");
+    this.registry = new this.instance.eth.Contract(RegistrySchema.abi, '0x380ee477AB34e7F0876F33304b804dD04618E5fD');
   }
 
-  /*async getAllCampaigns() {
-
-  }
-
-  async getCampaignsOwned(address: string) {
-    this.registry.methods.campaignsByOwner(address).call({})
-    .then(function(result){
+  async newCampaign(name: string, fundgoal: number, expiry: number) {
+    this.crowdfunding.methods.newCampaign(this.instance.utils.asciiToHex(name), fundgoal, expiry)
+    .send({from: this.userAddr})
+    .then((result) => {
       console.debug(result);
     });
   }
 
-  async getCampaignsContributed(address: string) {
-
-  }*/
-
-  newCampaign(name: string, fundgoal: number, expiry: number) {
-    this.crowdfunding.methods.newCampaign(this.instance.utils.asciiToHex(name))
-    .send({from: '0xebd9dea5f791df057138377b3e6b2eb5607fd1d5'}, 
-    (error, transactionHash) => {console.debug(transactionHash)})
-
-    this.crowdfunding.methods.setFundGoal(fundgoal)
-    .send({from: '0xebd9dea5f791df057138377b3e6b2eb5607fd1d5'}, 
-    (error, transactionHash) => {console.debug(transactionHash)})
-
-    this.crowdfunding.methods.setExpiry(expiry)
-    .send({from: '0xebd9dea5f791df057138377b3e6b2eb5607fd1d5'}, 
-    (error, transactionHash) => {console.debug(transactionHash)})
-  }
-
-  getOwnCampaign(address: string) {
-    this.userAddr = address;
+  async getOwnCampaign(address: string) {
+    //this.userAddr = address;
+    
     this.crowdfunding.methods.getOwnCampaign()
-    .send({from: this.userAddr},
-    (error, result) => {console.debug(this.userAddr)});
+    .send({from: this.userAddr})
+    .then((result) => {
+      console.debug(result);
+    });
   }
 
-  contributeToCampaign(weiAmount: number) {
-    //console.debug(weiAmount);
-    this.crowdfunding.methods.contributeToCampaign('0xebd9dea5f791df057138377b3e6b2eb5607fd1d5')
-    .send({from: '0xebd9dea5f791df057138377b3e6b2eb5607fd1d5', value: weiAmount},
-    (error, result) => {console.error(error); console.debug(result)});
-
-    this.registry.methods.registerContribution('0xebd9dea5f791df057138377b3e6b2eb5607fd1d5')
-    .send({from: '0xebd9dea5f791df057138377b3e6b2eb5607fd1d5', value: weiAmount},
-    (error, result) => {console.error(error); console.debug(result)});
+  async getAllContributions() {
+    this.registry.methods.getAllContributions()
+    .send({from: this.userAddr})
+    .then((result) => {
+      console.debug(result);
+    });
   }
 
-  getAllContributions() {
+  async contributeToCampaign(weiAmount: number) {
+    this.crowdfunding.methods.contributeToCampaign(this.userAddr)
+    .send({from: this.userAddr, value: weiAmount})
+    .then((result) => {
+      console.debug(result);
+    });
 
+    this.registry.methods.registerContribution(this.userAddr)
+    .send({from: this.userAddr, value: weiAmount})
+    .then((result) => {
+      console.debug(result);
+    });
   }
-
 }

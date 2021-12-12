@@ -8,10 +8,4 @@ import { Web3Service } from './web3.service';
 })
 export class AppComponent {
   title = 'scampaign';
-
-  constructor(private web3Service: Web3Service) {}
-
-  /*ngOnInit() {
-    this.web3Service.registerNewCampaign();
-  }*/
 }

@@ -12,10 +12,10 @@ export class UserProfileComponent {
 
   constructor(private web3service: Web3Service) {}
 
-  spawnCampaignCard() {
+  async spawnCampaignCard() {
     let address = (<HTMLInputElement>document.getElementById("userAddr")).value;
-    this.web3service.getOwnCampaign(address);
+    await this.web3service.getOwnCampaign(address);
+    
     this.contentControl = 1;
   }
-
 }

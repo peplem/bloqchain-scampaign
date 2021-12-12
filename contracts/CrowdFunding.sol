@@ -5,39 +5,33 @@ contract CrowdFunding {
 
     struct Campaign {
         bytes32 name;
-        //address payable owner;
         uint256 fundGoal;
         uint256 amountRaised;
         uint256 expiry;
     }
 
-    
-    mapping(address => Campaign) public campaignsByAddress;
+    mapping(address => Campaign) public campaignsByOwner;
 
-    function newCampaign(bytes32 _name) public {
-        campaignsByAddress[msg.sender] = Campaign(_name, 0, 0, 0);
-    }
+    function newCampaign(bytes32 _name, 
+            uint256 _fundGoal, 
+            uint256 _expiry) public 
+    {
+        require(_name != bytes32(0), "Name cannot be empty");
+        require(campaignsByOwner[msg.sender].name == bytes32(0), "Address already registered");
 
-    function setFundGoal(uint256 _fundGoal) public {
-        campaignsByAddress[msg.sender].fundGoal = _fundGoal;
-    }
-
-    function setExpiry(uint256 _expiry) public {
-        campaignsByAddress[msg.sender].expiry = _expiry;
+        campaignsByOwner[msg.sender] = Campaign(_name, _fundGoal, 0, _expiry);
     }
 
     function getOwnCampaign() public view
             returns (Campaign memory campaign)
     {
-        campaign = campaignsByAddress[msg.sender];
-        //emit campaignList(campaign);
+        campaign = campaignsByOwner[msg.sender];
     }
 
-    function contributeToCampaign(address _owner) public payable {
+    function contributeToCampaign(address owner) public payable {
         require(msg.value > 0, "Contribution not valid");
+        require(campaignsByOwner[owner].name != bytes32(0), "Campaign does not exist");
 
-        campaignsByAddress[_owner].amountRaised += msg.value;
+        campaignsByOwner[owner].amountRaised += msg.value;
     }
-
-    //event campaignList(Campaign campaign);
 }

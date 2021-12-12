@@ -13,20 +13,21 @@ export class CampaignSpawnComponent implements OnInit{
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
+
   name: string;
-  fundgoal: number;
+  fundGoal: number;
   expiry: number;
 
-  constructor(private web3service: Web3Service, private _formBuilder: FormBuilder) {}
+  constructor(private web3service: Web3Service, private formBuilder: FormBuilder) {}
 
   ngOnInit() {
-    this.firstFormGroup = this._formBuilder.group({
+    this.firstFormGroup = this.formBuilder.group({
       firstCtrl: ['', Validators.required],
     });
-    this.secondFormGroup = this._formBuilder.group({
+    this.secondFormGroup = this.formBuilder.group({
       secondCtrl: ['', Validators.required],
     });
-    this.thirdFormGroup = this._formBuilder.group({
+    this.thirdFormGroup = this.formBuilder.group({
       thirdCtrl: ['', Validators.required],
     });
     
@@ -37,14 +38,14 @@ export class CampaignSpawnComponent implements OnInit{
   }
 
   setFundGoal() {
-    this.fundgoal = Number((<HTMLInputElement>document.getElementById("fundgoal")).value);
+    this.fundGoal = Number((<HTMLInputElement>document.getElementById("fundgoal")).value);
   }
 
   setExpiry() {
     this.expiry = Number((<HTMLInputElement>document.getElementById("expiry")).value);
   }
 
-  spawnNewCampaign() {
-    this.web3service.newCampaign(this.name, this.fundgoal, this.expiry)
+  async spawnNewCampaign() {
+    await this.web3service.newCampaign(this.name, this.fundGoal, this.expiry)
   }
 }
