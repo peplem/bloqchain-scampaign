@@ -54,6 +54,9 @@ contract CrowdFunding {
         require(_name != bytes32(0), "Name cannot be empty");
         require(campaignsByOwner[msg.sender].name == bytes32(0), "Address already registered");
 
+        require(_fundGoal > 0, "Campaign goal not valid");
+        require(_expiry > 0, "Campaign expiry not valid");
+
         campaignsByOwner[msg.sender] = Campaign(_name, 
             Stages.CrowdfundOperational, 
             _fundGoal, 
