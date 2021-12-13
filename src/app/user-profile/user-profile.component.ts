@@ -1,5 +1,5 @@
-import { Component, OnInit} from '@angular/core';
-import { getSystemErrorMap } from 'util';
+import { Component, OnInit } from '@angular/core';
+import { sensitiveHeaders } from 'http2';
 import { Web3Service } from '../web3.service';
 
 @Component({
@@ -55,18 +55,18 @@ export class UserProfileComponent implements OnInit {
     .on('data', (event) => {
       //console.debug(event);
 
-      this.contributions = new Map();
+    this.contributions = event.returnValues['contributions'].reduce((acc, contribution) => {
+      let sender = contribution['sender'];
+      let value = Number(contribution['value']);
 
-      event.returnValues['contributions'].forEach(contribution => {
-        let sender = contribution['sender'];
-        let value = contribution['value'];
+      if (!acc[sender]) {
+        acc[sender] = 0;
+      }
 
-        if (!this.contributions.has(sender)) {
-          this.contributions.set(sender, 0);
-        }
-
-        this.contributions[sender] += value;
-      });
+      acc[sender] += value;
+      return acc;
+    },{});
+    console.debug(this.contributions);
     })
     .on('error', (err, _) => {
         console.error(err);
@@ -95,6 +95,4 @@ export class UserProfileComponent implements OnInit {
   async spawnPayout() {
     this.web3service.payoutFundRaised();
   }
-
-
 }

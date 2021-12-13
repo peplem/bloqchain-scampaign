@@ -15,10 +15,10 @@ export class Web3Service {
     this.instance = new Web3('ws://localhost:9545');
 
     const CrowdFundingSchema = require("../../build/contracts/CrowdFunding.json");
-    this.crowdfunding = new this.instance.eth.Contract(CrowdFundingSchema.abi, '0x121c50Cb87668Ded23746Cefa669d4c0a6A44F28');
+    this.crowdfunding = new this.instance.eth.Contract(CrowdFundingSchema.abi, '0x453a6c7783B7751fADE35b3F2f1f06b695255481');
     
     const RegistrySchema = require("../../build/contracts/Registry.json");
-    this.registry = new this.instance.eth.Contract(RegistrySchema.abi, '0xd447013f2f603d8cEbfD54367314F2768C9CdA65');
+    this.registry = new this.instance.eth.Contract(RegistrySchema.abi, '0xb6A0709f0E542e29D2fCeF5618A1313a37a11a51');
   }
 
   async newCampaign(name: string, fundgoal: number, expiry: number) {
