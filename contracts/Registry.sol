@@ -17,9 +17,12 @@ contract Registry {
         ));
     }
 
-    function getAllContributions() public view
+    function getAllContributions() public
             returns (Contribution[] memory contributions)
     {
         contributions = contributionsByCampaign[msg.sender];
+        emit GetAllContributions(contributions);
     }
+
+    event GetAllContributions(Contribution[] contributions);
 }

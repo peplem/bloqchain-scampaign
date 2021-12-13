@@ -47,10 +47,11 @@ contract CrowdFunding {
             block.timestamp + _expiry * 1 days);
     }
 
-    function getOwnCampaign() public view
+    function getOwnCampaign() public
             returns (Campaign memory campaign)
     {
         campaign = campaignsByOwner[msg.sender];
+        emit GetOwnCampaign(campaign);
     }
 
     function contributeToCampaign(address owner) 
@@ -73,4 +74,6 @@ contract CrowdFunding {
 		campaignsByOwner[msg.sender].amountRaised = 0;
 		payable(msg.sender).transfer(value);
 	}
+
+    event GetOwnCampaign(Campaign campaign);
 }
