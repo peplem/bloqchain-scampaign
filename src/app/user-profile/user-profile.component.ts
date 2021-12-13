@@ -1,4 +1,5 @@
 import { Component, OnInit} from '@angular/core';
+import { getSystemErrorMap } from 'util';
 import { Web3Service } from '../web3.service';
 
 @Component({
@@ -12,6 +13,7 @@ export class UserProfileComponent implements OnInit {
   expiry: number;
   fundGoal: number;
   status: string;
+  amountRaised: any;
 
   contributions: Map<string, number>;
 
@@ -22,10 +24,10 @@ export class UserProfileComponent implements OnInit {
   ngOnInit(): void {
     this.web3service.crowdfunding.events.GetOwnCampaign()
     .on("connected", (subscriptionId) => {
-      console.debug(subscriptionId);
+      //console.debug(subscriptionId);
     })
     .on('data', (event) => {
-      console.debug(event);
+      //console.debug(event);
 
       let campaign = event.returnValues['campaign'];
 
@@ -34,11 +36,12 @@ export class UserProfileComponent implements OnInit {
 
       this.fundGoal = campaign['fundGoal'];
       this.expiry = campaign['expiry'];
+      this.amountRaised = campaign['amountRaised'];
 
-      switch (campaign['status']) {
-        case 0: this.status = 'active'; break;
-        case 1: this.status = 'failed'; break;
-        case 2: this.status = 'successful'; break;
+      switch (campaign['stage']) {
+        case '0': this.status = 'active'; break;
+        case '1': this.status = 'failed'; break;
+        case '2': this.status = 'successful'; break;
       }
     })
     .on('error', (err, _) => {
@@ -47,10 +50,10 @@ export class UserProfileComponent implements OnInit {
 
     this.web3service.registry.events.GetAllContributions()
     .on("connected", (subscriptionId) => {
-      console.debug(subscriptionId);
+      //console.debug(subscriptionId);
     })
     .on('data', (event) => {
-      console.debug(event);
+      //console.debug(event);
 
       this.contributions = new Map();
 
@@ -77,15 +80,21 @@ export class UserProfileComponent implements OnInit {
     this.web3service.crowdfunding.methods.getOwnCampaign()
     .send({from: this.web3service.userAddr})
     .then((result) => {
-      console.debug(result);
+      //console.debug(result);
     });
 
     this.web3service.registry.methods.getAllContributions()
     .send({from: this.web3service.userAddr})
     .then((result) => {
-      console.debug(result);
+      //console.debug(result);
     });
     
     this.contentControl = 1;
   }
+
+  async spawnPayout() {
+    this.web3service.payoutFundRaised();
+  }
+
+
 }

@@ -9,16 +9,16 @@ export class Web3Service {
   registry;
   crowdfunding;
 
-  userAddr = '0x2a548ca6454a0e31f3aa20b4c24abc3fe53c1f69';
+  userAddr = '0x3c91ed17e8c1a27ceeaa0f53d3740657224dbea8';
 
   constructor() { 
     this.instance = new Web3('ws://localhost:9545');
 
     const CrowdFundingSchema = require("../../build/contracts/CrowdFunding.json");
-    this.crowdfunding = new this.instance.eth.Contract(CrowdFundingSchema.abi, '0xAbE843Dd143A9cf72775B2b0645E0Cd9887e05b4');
+    this.crowdfunding = new this.instance.eth.Contract(CrowdFundingSchema.abi, '0x121c50Cb87668Ded23746Cefa669d4c0a6A44F28');
     
     const RegistrySchema = require("../../build/contracts/Registry.json");
-    this.registry = new this.instance.eth.Contract(RegistrySchema.abi, '0xe01a9E15D5AfEA177ea3bEF31994761477B9d80d');
+    this.registry = new this.instance.eth.Contract(RegistrySchema.abi, '0xd447013f2f603d8cEbfD54367314F2768C9CdA65');
   }
 
   async newCampaign(name: string, fundgoal: number, expiry: number) {
@@ -42,4 +42,20 @@ export class Web3Service {
       console.debug(result);
     });
   }
+
+  async payoutFundRaised() {
+    this.crowdfunding.methods.payoutFundRaised()
+    .send({from: this.userAddr})
+    .then((result) => {
+      console.debug(result);
+    });
+  }
+
+  /*getAllCampaigns(){
+    this.crowdfunding.methods.getAllCampaigns()
+    .send({from: this.userAddr})
+    .then((result) => {
+      console.debug(result);
+    });
+  }*/
 }

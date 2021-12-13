@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { Web3Service } from '../web3.service';
 
 @Component({

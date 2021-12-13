@@ -20,18 +20,32 @@ contract CrowdFunding {
     mapping(address => Campaign) public campaignsByOwner;
 
     modifier atStage(address owner, Stages _expectedStage) {
-		if (block.timestamp < campaignsByOwner[owner].expiry) {
+		/*if (block.timestamp < campaignsByOwner[owner].expiry) {
 			require(_expectedStage == Stages.CrowdfundOperational, "Campaign active");
 		} else if(block.timestamp >= campaignsByOwner[owner].expiry && 
                 campaignsByOwner[owner].amountRaised < campaignsByOwner[owner].fundGoal) {
 			require(_expectedStage == Stages.CrowdfundFailure, "Campaign failed");
-		} else if(block.timestamp >= campaignsByOwner[owner].expiry && 
-                campaignsByOwner[owner].amountRaised >= campaignsByOwner[owner].fundGoal) {
+		} else if(campaignsByOwner[owner].amountRaised >= campaignsByOwner[owner].fundGoal) {
 			require(_expectedStage == Stages.CrowdfundSuccess, "Campaign terminated");
-		}
+		}*/
+
+        require(_expectedStage == checkStage(owner));
 		
 		_;
 	}
+
+    function checkStage(address owner) public view
+        returns (Stages currentStage)
+    {
+        if (block.timestamp < campaignsByOwner[owner].expiry) {
+			currentStage = Stages.CrowdfundOperational;
+		} else if(block.timestamp >= campaignsByOwner[owner].expiry && 
+                campaignsByOwner[owner].amountRaised < campaignsByOwner[owner].fundGoal) {
+			currentStage = Stages.CrowdfundFailure;
+		} else if(campaignsByOwner[owner].amountRaised >= campaignsByOwner[owner].fundGoal) {
+			currentStage = Stages.CrowdfundSuccess;
+		}
+    }
 
     function newCampaign(bytes32 _name, 
             uint256 _fundGoal, 
@@ -50,6 +64,7 @@ contract CrowdFunding {
     function getOwnCampaign() public
             returns (Campaign memory campaign)
     {
+        campaignsByOwner[msg.sender].stage = checkStage(msg.sender);
         campaign = campaignsByOwner[msg.sender];
         emit GetOwnCampaign(campaign);
     }
