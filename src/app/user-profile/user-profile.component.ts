@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { sensitiveHeaders } from 'http2';
+import { Component, OnInit} from '@angular/core';
 import { Web3Service } from '../web3.service';
 
 @Component({
@@ -8,24 +7,20 @@ import { Web3Service } from '../web3.service';
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
+  contentControl: number = 0;
 
   campaignName: string;
   expiry: number;
   fundGoal: number;
   status: string;
-  amountRaised: any;
+  amountRaised: number;
 
   contributions: Map<string, number>;
-
-  contentControl: number = 0;
 
   constructor(private web3service: Web3Service) {}
 
   ngOnInit(): void {
     this.web3service.crowdfunding.events.GetOwnCampaign()
-    .on("connected", (subscriptionId) => {
-      //console.debug(subscriptionId);
-    })
     .on('data', (event) => {
       //console.debug(event);
 
@@ -44,55 +39,36 @@ export class UserProfileComponent implements OnInit {
         case '2': this.status = 'successful'; break;
       }
     })
-    .on('error', (err, _) => {
-        console.error(err);
-    });
+    .on('error', (err, _) => console.error(err));
 
     this.web3service.registry.events.GetAllContributions()
-    .on("connected", (subscriptionId) => {
-      //console.debug(subscriptionId);
-    })
     .on('data', (event) => {
       //console.debug(event);
 
-    this.contributions = event.returnValues['contributions'].reduce((acc, contribution) => {
-      let sender = contribution['sender'];
-      let value = Number(contribution['value']);
+      this.contributions = event.returnValues['contributions']
+      .reduce((contributions: Map<string, number>, c) => {
+        const sender = c['sender'];
+        const value = Number(c['value']);
 
-      if (!acc[sender]) {
-        acc[sender] = 0;
-      }
-
-      acc[sender] += value;
-      return acc;
-    },{});
-    console.debug(this.contributions);
-    })
-    .on('error', (err, _) => {
-        console.error(err);
-    });
+        return contributions.set(sender, (contributions.get(sender) || 0) + value)
+      }, new Map<string, number>());
+    }).on('error', (err, _) => console.error(err));
   }
 
   async spawnCampaignCard() {
     //let address = (<HTMLInputElement>document.getElementById("userAddr")).value;
     //await this.web3service.getUserCampaigns(address);
 
-    this.web3service.crowdfunding.methods.getOwnCampaign()
+    await this.web3service.crowdfunding.methods.getOwnCampaign()
     .send({from: this.web3service.userAddr})
-    .then((result) => {
-      //console.debug(result);
-    });
 
-    this.web3service.registry.methods.getAllContributions()
+    await this.web3service.registry.methods.getAllContributions()
     .send({from: this.web3service.userAddr})
-    .then((result) => {
-      //console.debug(result);
-    });
     
     this.contentControl = 1;
   }
 
   async spawnPayout() {
-    this.web3service.payoutFundRaised();
+    await this.web3service.payoutFundRaised();
   }
 }

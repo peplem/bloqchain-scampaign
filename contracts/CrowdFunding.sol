@@ -19,21 +19,6 @@ contract CrowdFunding {
 
     mapping(address => Campaign) public campaignsByOwner;
 
-    modifier atStage(address owner, Stages _expectedStage) {
-		/*if (block.timestamp < campaignsByOwner[owner].expiry) {
-			require(_expectedStage == Stages.CrowdfundOperational, "Campaign active");
-		} else if(block.timestamp >= campaignsByOwner[owner].expiry && 
-                campaignsByOwner[owner].amountRaised < campaignsByOwner[owner].fundGoal) {
-			require(_expectedStage == Stages.CrowdfundFailure, "Campaign failed");
-		} else if(campaignsByOwner[owner].amountRaised >= campaignsByOwner[owner].fundGoal) {
-			require(_expectedStage == Stages.CrowdfundSuccess, "Campaign terminated");
-		}*/
-
-        require(_expectedStage == checkStage(owner));
-		
-		_;
-	}
-
     function checkStage(address owner) public view
         returns (Stages currentStage)
     {
@@ -42,7 +27,8 @@ contract CrowdFunding {
 		} else if(block.timestamp >= campaignsByOwner[owner].expiry && 
                 campaignsByOwner[owner].amountRaised < campaignsByOwner[owner].fundGoal) {
 			currentStage = Stages.CrowdfundFailure;
-		} else if(campaignsByOwner[owner].amountRaised >= campaignsByOwner[owner].fundGoal) {
+		} else if(block.timestamp >= campaignsByOwner[owner].expiry &&
+                campaignsByOwner[owner].amountRaised >= campaignsByOwner[owner].fundGoal) {
 			currentStage = Stages.CrowdfundSuccess;
 		}
     }
@@ -68,25 +54,24 @@ contract CrowdFunding {
             returns (Campaign memory campaign)
     {
         campaignsByOwner[msg.sender].stage = checkStage(msg.sender);
+        
         campaign = campaignsByOwner[msg.sender];
         emit GetOwnCampaign(campaign);
     }
 
-    function contributeToCampaign(address owner) 
-            atStage(owner, Stages.CrowdfundOperational)
-            public payable
-    {
+    function contributeToCampaign(address owner) public payable {
+        require(campaignsByOwner[owner].stage == Stages.CrowdfundOperational, "Campaign terminated");
+        
         require(msg.value > 0, "Contribution not valid");
         require(campaignsByOwner[owner].name != bytes32(0), "Campaign does not exist");
 
         campaignsByOwner[owner].amountRaised += msg.value;
     }
 
-    function payoutFundRaised() 
-			atStage(msg.sender, Stages.CrowdfundSuccess)
-			public payable
-	{
-		uint256 value = campaignsByOwner[msg.sender].amountRaised;
+    function payoutFundRaised() public payable {
+		require(campaignsByOwner[msg.sender].stage == Stages.CrowdfundSuccess, "Payout not available");
+        
+        uint256 value = campaignsByOwner[msg.sender].amountRaised;
 		require(value > 0, "Payout already handed");
 		
 		campaignsByOwner[msg.sender].amountRaised = 0;

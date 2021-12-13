@@ -6,8 +6,6 @@ import { CampaignListComponent } from './campaign-list/campaign-list.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { EasterEggComponent } from './easter-egg/easter-egg.component';
 
-
-
 const routes: Routes = [
   { path: 'spawn', component: CampaignSpawnComponent },
   { path: 'desc', component: CampaignDescComponent },
