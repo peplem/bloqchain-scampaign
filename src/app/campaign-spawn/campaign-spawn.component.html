@@ -28,7 +28,7 @@
           <input id="name" matInput placeholder="" formControlName="firstCtrl" required>
         </mat-form-field>
         <div>
-          <button mat-button matStepperNext (click)="setName()" >Next</button>
+          <button mat-button color="primary" matStepperNext (click)="setName()" >NEXT</button>
         </div>
       </form>
     </mat-step>
@@ -40,8 +40,8 @@
                  required>
         </mat-form-field>
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext (click)="setFundGoal()">Next</button>
+          <button mat-button color="primary" matStepperPrevious>BACK</button>
+          <button mat-button color="primary" matStepperNext (click)="setFundGoal()">NEXT</button>
         </div>
       </form>
     </mat-step>
@@ -53,16 +53,16 @@
                  required>
         </mat-form-field>
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext (click)="setExpiry()">Next</button>
+          <button mat-button color="primary" matStepperPrevious>BACK</button>
+          <button mat-button color="primary" matStepperNext (click)="setExpiry()">NEXT</button>
         </div>
       </form>
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>Four</ng-template>
       <div>
-        <button mat-button (click)="spawnNewCampaign()">Submit</button>
-        <button mat-button (click)="stepper.reset()">Reset</button>
+        <button mat-button color="primary" (click)="spawnNewCampaign()">SUBMIT</button>
+        <button mat-button color="primary" (click)="stepper.reset()">RESET</button>
       </div>
     </mat-step>
   </mat-stepper>  
