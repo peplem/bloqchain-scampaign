@@ -24,19 +24,23 @@ export class Web3Service {
 
   async newCampaign(name: string, fundgoal: number, expiry: number) {
     await this.crowdfunding.methods.newCampaign(this.instance.utils.asciiToHex(name), fundgoal, expiry)
-    .send({from: this.userAddr, gas: 110000})
+    .send({from: this.userAddr})
+    .then((hash) => console.debug('Campaign created: ', hash));
   }
 
   async contributeToCampaign(weiAmount: number) {
     await this.crowdfunding.methods.contributeToCampaign(this.userAddr)
     .send({from: this.userAddr, value: weiAmount})
+    .then((hash) => console.debug('Contribute sent: ', hash));
 
     await this.registry.methods.registerContribution(this.userAddr)
     .send({from: this.userAddr, value: weiAmount})
+    .then((hash) => console.debug('Contribute registered: ', hash));
   }
 
   async payoutFundRaised() {
     await this.crowdfunding.methods.payoutFundRaised()
     .send({from: this.userAddr})
+    .then((hash) => console.debug('Payout issued: ', hash));
   }
 }

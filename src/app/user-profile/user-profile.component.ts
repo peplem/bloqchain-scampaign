@@ -10,7 +10,7 @@ export class UserProfileComponent implements OnInit {
   contentControl: number = 0;
 
   campaignName: string;
-  expiry: number;
+  expiry: Date = new Date(0);
   fundGoal: number;
   status: string;
   amountRaised: number;
@@ -22,15 +22,13 @@ export class UserProfileComponent implements OnInit {
   ngOnInit(): void {
     this.web3service.crowdfunding.events.GetOwnCampaign()
     .on('data', (event) => {
-      //console.debug(event);
-
       let campaign = event.returnValues['campaign'];
 
       let name = campaign['name'];
       this.campaignName = this.web3service.instance.utils.hexToAscii(name);
 
       this.fundGoal = campaign['fundGoal'];
-      this.expiry = campaign['expiry'];
+      this.expiry.setUTCSeconds(campaign['expiry']);
       this.amountRaised = campaign['amountRaised'];
 
       switch (campaign['stage']) {
@@ -43,8 +41,6 @@ export class UserProfileComponent implements OnInit {
 
     this.web3service.registry.events.GetAllContributions()
     .on('data', (event) => {
-      //console.debug(event);
-
       this.contributions = event.returnValues['contributions']
       .reduce((contributions: Map<string, number>, c) => {
         const sender = c['sender'];
