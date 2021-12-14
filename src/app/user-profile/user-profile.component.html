@@ -13,7 +13,7 @@
         <p>expiry: <strong>{{ expiry }}</strong></p>
         <p>raised: <strong>{{ amountRaised }}</strong></p>
         <mat-card-actions align="end">
-          <button mat-button color="primary" (click)="spawnPayout()" *ngIf="status == 'successful' && amountRaised > 0">PAYOUT</button>
+          <button mat-button color="primary" (click)="spawnPayout()" *ngIf="status === 'successful' && amountRaised > 0">PAYOUT</button>
         </mat-card-actions>
     </mat-card>
     </mat-card-content>
@@ -21,11 +21,16 @@
       <mat-card>
         <h2>Funded Campaigns: </h2>
         <mat-card-content>
-          <ul>
+          <!--<ul>
             <li *ngFor="let c of contributions | keyvalue">
                 {{c.key}} : {{c.value}}
             </li>
-        </ul>
+        </ul>-->
+        <mat-list role="list">
+          <mat-list-item role="listitem" *ngFor="let c of contributions | keyvalue">
+            {{c.key}} &#10149; {{c.value}}
+          </mat-list-item>
+        </mat-list>        
         </mat-card-content>
       </mat-card>
     </mat-card-content>
