@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { Web3Service } from '../web3.service';
 
 @Component({
@@ -15,5 +14,4 @@ export class CampaignDescComponent {
     let weiAmount = Number((<HTMLInputElement>document.getElementById("weiamount")).value);
     this.web3service.contributeToCampaign(weiAmount)
   }
-
 }

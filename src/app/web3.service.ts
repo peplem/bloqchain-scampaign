@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import Web3 from 'web3';
 
 @Injectable({
@@ -9,16 +10,16 @@ export class Web3Service {
   registry;
   crowdfunding;
 
-  userAddr = '0x704109b0fed58e84f890d0fbd084b66842dcde14';
+  userAddr = environment.userAddress;
 
-  constructor() { 
-    this.instance = new Web3('ws://localhost:9545');
+  constructor() {
+    this.instance = new Web3(environment.truffleUrl);
 
     const CrowdFundingSchema = require("../../build/contracts/CrowdFunding.json");
-    this.crowdfunding = new this.instance.eth.Contract(CrowdFundingSchema.abi, '0xAbE843Dd143A9cf72775B2b0645E0Cd9887e05b4');
+    this.crowdfunding = new this.instance.eth.Contract(CrowdFundingSchema.abi, environment.crowdFundingAddress);
     
     const RegistrySchema = require("../../build/contracts/Registry.json");
-    this.registry = new this.instance.eth.Contract(RegistrySchema.abi, '0xe01a9E15D5AfEA177ea3bEF31994761477B9d80d');
+    this.registry = new this.instance.eth.Contract(RegistrySchema.abi, environment.RegistryAddress);
   }
 
   async newCampaign(name: string, fundgoal: number, expiry: number) {

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Web3Service } from './web3.service';
 
 @Component({
   selector: 'app-root',

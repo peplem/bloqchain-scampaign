@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Web3Service } from '../web3.service';
 
-
 @Component({
   selector: 'app-campaign-spawn',
   templateUrl: './campaign-spawn.component.html',

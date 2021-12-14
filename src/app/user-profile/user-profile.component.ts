@@ -52,7 +52,8 @@ export class UserProfileComponent implements OnInit {
 
         return contributions.set(sender, (contributions.get(sender) || 0) + value)
       }, new Map<string, number>());
-    }).on('error', (err, _) => console.error(err));
+    })
+    .on('error', (err, _) => console.error(err));
   }
 
   async spawnCampaignCard() {

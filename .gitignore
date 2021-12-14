@@ -1,7 +1,3 @@
-
-# Created by 
-# Edit at 
-
 ### Angular ###
 ## Angular ##
 # compiled output
@@ -153,16 +149,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-### SolidityTruffle ###
-# depedencies
-node_modules
-
-# testing
-
-# production
-build
-build_webpack
-
 # misc
 .DS_Store
 .truffle-solidity-loader
@@ -170,3 +156,7 @@ build_webpack
 blockchain/geth/**
 blockchain/keystore/**
 blockchain/history
+src/environments/environment.ts
+
+# truffle
+build/
