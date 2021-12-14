@@ -4,9 +4,9 @@ pragma solidity >=0.7.0 <0.9.0;
 contract CrowdFunding {
 
     enum Stages {
-		CrowdfundOperational,
-		CrowdfundFailure,
-		CrowdfundSuccess
+		Operational,
+		Failure,
+		Success
 	}
 
     struct Campaign {
@@ -23,13 +23,13 @@ contract CrowdFunding {
         returns (Stages currentStage)
     {
         if (block.timestamp < campaignsByOwner[owner].expiry) {
-			currentStage = Stages.CrowdfundOperational;
+			currentStage = Stages.Operational;
 		} else if(block.timestamp >= campaignsByOwner[owner].expiry && 
                 campaignsByOwner[owner].amountRaised < campaignsByOwner[owner].fundGoal) {
-			currentStage = Stages.CrowdfundFailure;
+			currentStage = Stages.Failure;
 		} else if(block.timestamp >= campaignsByOwner[owner].expiry &&
                 campaignsByOwner[owner].amountRaised >= campaignsByOwner[owner].fundGoal) {
-			currentStage = Stages.CrowdfundSuccess;
+			currentStage = Stages.Success;
 		}
     }
 
@@ -44,7 +44,7 @@ contract CrowdFunding {
         require(_expiry > 0, "Campaign expiry not valid");
 
         campaignsByOwner[msg.sender] = Campaign(_name, 
-            Stages.CrowdfundOperational, 
+            Stages.Operational, 
             _fundGoal, 
             0, 
             block.timestamp + _expiry * 1 days);
@@ -60,7 +60,7 @@ contract CrowdFunding {
     }
 
     function contributeToCampaign(address owner) public payable {
-        require(campaignsByOwner[owner].stage == Stages.CrowdfundOperational, "Campaign terminated");
+        require(campaignsByOwner[owner].stage == Stages.Operational, "Campaign terminated");
         
         require(msg.value > 0, "Contribution not valid");
         require(campaignsByOwner[owner].name != bytes32(0), "Campaign does not exist");
@@ -69,7 +69,7 @@ contract CrowdFunding {
     }
 
     function payoutFundRaised() public payable {
-		require(campaignsByOwner[msg.sender].stage == Stages.CrowdfundSuccess, "Payout not available");
+		require(campaignsByOwner[msg.sender].stage == Stages.Success, "Payout not available");
         
         uint256 value = campaignsByOwner[msg.sender].amountRaised;
 		require(value > 0, "Payout already handed");
